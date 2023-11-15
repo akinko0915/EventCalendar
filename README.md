@@ -19,23 +19,35 @@
 
 ![USERとAdmin用の基本機能](images/Basic-function.png "basic-function")
 
-## 2\. カレンダー
+## 2\. User
 
-![カレンダーとモダル](images/Calendar-images.png "calendar-images")
-![説明](images/Calendar-description.png "calendar-description")
+### 1\. カレンダー
 
-## 3\. イベント詳細
+![カレンダーとモダル](images/Calendar.png "calendar")
 
-![イベント詳細と編集ページ](images/Event-detail%26edit.png "calendar-detail&edit")
+### 2\. イベントの詳細
 
-## 4\. 申込フォーム
+![イベント詳細ページ](images/Event-detail.png "event-detail")
+
+### 3\. 申込フォーム
 
 ![申込フォーム](images/Apply-image.png "apply-image")
 ![説明](images/Apply-description.png "apply-description")
 
-## 5\.　イベント作成
+## 2\.　 Admin
 
-![イベント作成](images/Create-event.png "create-event")
+### 1\. イベント編集（Category）
+
+![Category](images/Category.png "Category")
+
+### 2\. イベント編集(Title)
+
+![Title](images/Title.png "Title")
+
+### 3\. イベント編集(Event)
+
+![Event-images](images/Event-images.png "Event-images")
+![Event-description](images/Event-description.png "Event-description")
 
 # 3\. データベース設計
 
@@ -68,28 +80,22 @@
 
 ## 5\. Titles
 
-| id  | category_id  | name                   | form_id |
-| --- | ------------ | ---------------------- | ------- |
-| 1   | 勉強会       | Joyful English Meetup  | 1       |
-| 2   | 勉強会       | ひよこプログラミング塾 | 2       |
-| 3   | PodCasts     | Listen to Voice        | 3       |
-| 4   | 季節イベント | クリスマス会           | 4       |
-| 5   | スポーツ     | バレーボール           | 5       |
+| id  | category_id  | name                   | form_url              |
+| --- | ------------ | ---------------------- | --------------------- |
+| 1   | 勉強会       | Joyful English Meetup  | https://forms.gle/... |
+| 2   | 勉強会       | ひよこプログラミング塾 | ...                   |
+| 3   | PodCasts     | Listen to Voice        | ...                   |
+| 4   | 季節イベント | クリスマス会           | ....                  |
+| 5   | スポーツ     | バレーボール           | ....                  |
+|  |
 
-## 6\. Forms
+## 6\. Applications
 
-| id  | form_url                            |
-| --- | ----------------------------------- |
-| 1   | https://forms.gle/j7ayVeeAwewx6D2Q8 |
-| 2   | ・・・                              |
+| id  | event_id | mail | sex_id | property_id | year_id | qualification | confirmed |
+| --- | -------- | ---- | ------ | ----------- | ------- | ------------- | --------- | --- |
+| 1   |          |      |        |             |         |               |           |     |
 
-## 7\. Applications
-
-| id  | form_id | event_id | mail | sex_id | property_id | year_id | qualification | confirmed |
-| --- | ------- | -------- | ---- | ------ | ----------- | ------- | ------------- | --------- |
-| 1   |         |          |      |        |             |         |               |           |
-
-## 8\. Years
+## 7\. Years
 
 | id  | year           |
 | --- | -------------- |
@@ -100,7 +106,7 @@
 | 5   | 10 年 ～ 15 年 |
 | 6   | 15 年 ～       |
 
-## 9\. Properties
+## 8\. Properties
 
 | id  | name               |
 | --- | ------------------ |
@@ -119,7 +125,7 @@
 | 13  | 定年退職           |
 | 14  | その他             |
 
-## 10\. Sexes
+## 9\. Sexes
 
 | id  | name   |
 | --- | ------ |
