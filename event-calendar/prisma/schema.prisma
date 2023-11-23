@@ -6,6 +6,70 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model User{
+  id              Int @id @default(autoincrement())
+  role            Role  @default(USER)
+  name            String
+  email           String @unique
+  password        String
+  events          EventUser[] 
+}
+
+model Category{
+  id              Int @id @default(autoincrement())
+  name            String
+  color           String
+
+  eventId         Int @unique
+  events          Event[]
+  titles          Title[]
+}
+
+model Title{
+  id              Int @id @default(autoincrement())
+  categoryId      Int @unique
+  category        Category @relation(fields: [categoryId], references: [id])
+  name            String
+  form_url        String
+  events          Event[]
+}
+
+model Event{
+  id              Int @id @default(autoincrement())
+  categoryId      Int
+  category        Category @relation(fields:[categoryId], references: [id])
+
+  titleId         Int
+  title           Title @relation(fields:[titleId], references: [id])
+
+  dateTime        DateTime 
+  place           String
+  target          String
+  maximumParticipant   Int
+  fee             Int
+  imageUrl        String
+  description     String
+  
+  participants    EventUser[]
+  createdAt       DateTime?   @default(now())
+  updatedAt       DateTime?   @updatedAt
+}
+
+model EventUser{
+  userId          Int
+  user            User @relation(fields: [userId], references: [id])
+  
+  eventId         Int
+  event           Event @relation(fields: [eventId], references:[id])
+
+  @@id([userId, eventId])
+}
+
+enum Role {
+  USER
+  ADMIN
 }
