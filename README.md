@@ -53,19 +53,19 @@
 
 ## 1\. 全体構造
 
-![全体構造](images/structure.png "structure")
+![全体構造](images/ER-diagram.png "er-diagram")
 
 ## 2\. Users
 
-| id  | role (User/Admin) | name | ID  | password |
-| --- | ----------------- | ---- | --- | -------- |
-|     |                   |      |     |          |
+| id  | role (User/Admin) | name | ID  | password | events |
+| --- | ----------------- | ---- | --- | -------- | ------ |
+|     |                   |      |     |          | ------ |
 
 ## 3\. Events
 
-| id  | category_id | title_id | date | time | place | target | maximum participant | fee | image | description | participant_number |
-| --- | ----------- | -------- | ---- | ---- | ----- | ------ | ------------------- | --- | ----- | ----------- | ------------------ |
-|     |             |          |      |      |       |        |                     |     |       |
+| id  | category_id | title_id | datetime | place | target | maximum participant | fee | imageURL | description | participant_number | created_at | updated_at |
+| --- | ----------- | -------- | -------- | ----- | ------ | ------------------- | --- | -------- | ----------- | ------------------ | ---------- | ---------- |
+|     |             |          |          |       |        |                     |     |          |             |                    |            |
 
 ## 4\. Categories
 
@@ -88,46 +88,3 @@
 | 4   | 季節イベント | クリスマス会           | ....                  |
 | 5   | スポーツ     | バレーボール           | ....                  |
 |     |
-
-## 6\. Applications
-
-| id  | event_id | mail | sex_id | property_id | year_id | qualification | confirmed |
-| --- | -------- | ---- | ------ | ----------- | ------- | ------------- | --------- |
-
-## 7\. Years
-
-| id  | year           |
-| --- | -------------- |
-| 1   | 始めたばかり   |
-| 2   | 1 年 ～ 3 年   |
-| 3   | 3 年 ～ 5 年   |
-| 4   | 5 年 ～ 10 年  |
-| 5   | 10 年 ～ 15 年 |
-| 6   | 15 年 ～       |
-
-## 8\. Properties
-
-| id  | name               |
-| --- | ------------------ |
-| 1   | 経営者・役員       |
-| 2   | 会社員             |
-| 3   | パート・アルバイト |
-| 4   | 公務員             |
-| 5   | 教職員             |
-| 6   | 医療関係者         |
-| 7   | 専業主婦・主夫     |
-| 8   | 自営業・自由業     |
-| 9   | 大学生・大学院生   |
-| 10  | 専門学校生・短大生 |
-| 11  | 中高生             |
-| 12  | 無職               |
-| 13  | 定年退職           |
-| 14  | その他             |
-
-## 9\. Sexes
-
-| id  | name   |
-| --- | ------ |
-| 1   | 男     |
-| 2   | 女     |
-| 3   | その他 |
