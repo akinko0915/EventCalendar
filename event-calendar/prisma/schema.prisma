@@ -5,13 +5,15 @@ generator client {
   provider = "prisma-client-js"
 }
 
+
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
+
 model User{
-  id              Int @id @default(autoincrement())
+  id              String @id @default(cuid())
   role            Role  @default(USER)
   name            String
   email           String @unique
@@ -20,9 +22,9 @@ model User{
 }
 
 model Category{
-  id              Int @id @default(autoincrement())
+  id              String @id @default(cuid())
   name            String
-  color           String
+  color           String?
 
   eventId         Int @unique
   events          Event[]
@@ -30,8 +32,8 @@ model Category{
 }
 
 model Title{
-  id              Int @id @default(autoincrement())
-  categoryId      Int @unique
+  id              String @id @default(cuid())
+  categoryId      String @unique
   category        Category @relation(fields: [categoryId], references: [id])
   name            String
   form_url        String
@@ -39,11 +41,11 @@ model Title{
 }
 
 model Event{
-  id              Int @id @default(autoincrement())
-  categoryId      Int
+  id              String @id @default(cuid())
+  categoryId      String
   category        Category @relation(fields:[categoryId], references: [id])
 
-  titleId         Int
+  titleId         String
   title           Title @relation(fields:[titleId], references: [id])
 
   dateTime        DateTime 
@@ -60,10 +62,10 @@ model Event{
 }
 
 model EventUser{
-  userId          Int
+  userId          String
   user            User @relation(fields: [userId], references: [id])
   
-  eventId         Int
+  eventId         String
   event           Event @relation(fields: [eventId], references:[id])
 
   @@id([userId, eventId])
