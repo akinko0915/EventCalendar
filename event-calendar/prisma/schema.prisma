@@ -26,7 +26,7 @@ model Category{
   name            String
   color           String?
 
-  eventId         Int @unique
+  eventId         Int? @unique
   events          Event[]
   titles          Title[]
 }
@@ -48,17 +48,20 @@ model Event{
   titleId         String
   title           Title @relation(fields:[titleId], references: [id])
 
-  dateTime        DateTime 
+  date            DateTime 
+  startAt         DateTime
+  endAt           DateTime
   place           String
   target          String
   maximumParticipant   Int
   fee             Int
-  imageUrl        String
+  imageUrl        String?
   description     String
   
   participants    EventUser[]
   createdAt       DateTime?   @default(now())
   updatedAt       DateTime?   @updatedAt
+  published       Boolean?  @default(false)
 }
 
 model EventUser{

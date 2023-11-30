@@ -1,0 +1,28 @@
+export const events = [
+  {
+    id: "1",
+    categoryId: "1",
+    titleId: "1",
+    date: "2023-12-4",
+    startAt: "16:30",
+    endAt: "17:45",
+    place: "オモケンパーク",
+    target: "大学生・高校生",
+    maximumParticipant: 8,
+    fee: 500,
+    description: "",
+  },
+  // {
+  //   id: "2",
+  //   categoryId: "1",
+  //   titleId: "1",
+  //   date: "2023-12-4",
+  //   startAt: "16:30",
+  //   endAt: "17:45",
+  //   place: "オモケンパーク",
+  //   target: "大学生・高校生",
+  //   maximumParticipant: 8,
+  //   fee: 500,
+  //   description: "",
+  // },
+];
