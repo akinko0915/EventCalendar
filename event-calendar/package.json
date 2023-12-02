@@ -22,24 +22,26 @@
     "@remix-run/node": "^2.3.0",
     "@remix-run/react": "^2.3.0",
     "@remix-run/serve": "^2.3.0",
+    "@types/bcryptjs": "^2.4.6",
     "@types/react": "^18.2.38",
     "@types/react-dom": "^18.2.16",
+    "bcryptjs": "^2.4.3",
     "framer-motion": "^6.5.1",
     "isbot": "^3.6.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
-  "prisma": {
-    "seed": "ts-node prisma/seed.ts"
-  },
   "devDependencies": {
     "@remix-run/dev": "^2.3.0",
     "@remix-run/eslint-config": "^2.3.0",
-    "@types/node": "^20.9.4",
+    "@types/node": "^20.10.2",
     "eslint": "^8.38.0",
     "prisma": "^5.6.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.3.2"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   },
   "engines": {
     "node": ">=18.0.0"
