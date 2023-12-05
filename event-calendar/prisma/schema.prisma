@@ -36,13 +36,13 @@ model Title{
   categoryId      String @unique
   category        Category @relation(fields: [categoryId], references: [id])
   name            String
-  form_url        String
+  form_url        String?
   events          Event[]
 }
 
 model Event{
   id              String @id @default(cuid())
-  categoryId      String
+  categoryId      String @unique
   category        Category @relation(fields:[categoryId], references: [id])
 
   titleId         String

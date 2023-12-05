@@ -1,38 +1,48 @@
-import { categories } from "./categories";
-import { titles } from "./titles";
-import { users } from "./users";
-import { events } from "./events";
+import { categories } from "./categories.js";
+import { titles } from "./titles.js";
+import { users } from "./users.js";
+import { events } from "./events.js";
 
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 async function main() {
   // usersのseed入れる
   for (let user of users) {
-    await prisma.user.create({
-      data: user,
+    await prisma.user.upsert({
+      where: { email: user.email },
+      update: user,
+      create: user,
     });
   }
-  console.log({ categories });
+  console.log({ users });
 
   for (let category of categories) {
-    await prisma.category.create({
-      data: category,
+    await prisma.category.upsert({
+      where: { id: category.id },
+      update: category,
+      create: category,
     });
   }
   console.log({ categories });
 
+  // await prisma.title.deleteMany({});
   for (let title of titles) {
-    await prisma.title.create({
-      data: title,
+    await prisma.title.upsert({
+      where: { id: title.id },
+      update: title,
+      create: title,
     });
   }
   console.log({ titles });
 
   for (let event of events) {
-    await prisma.event.create({
-      data: event,
+    await prisma.event.upsert({
+      where: { id: event.id },
+      update: event,
+      create: event,
     });
   }
+  console.log({ events });
 }
 
 // eventsのseed入れる
