@@ -31,4 +31,10 @@ export const titles = [
     name: "バレーボール",
     // form_url: "",
   },
+  {
+    id: "6",
+    categoryId: categories[1].id,
+    name: "IPPIN",
+    // form_url: "",
+  },
 ];

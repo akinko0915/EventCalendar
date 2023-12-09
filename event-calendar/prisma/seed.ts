@@ -7,6 +7,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 async function main() {
   // usersのseed入れる
+  // await prisma.user.deleteMany({});
   for (let user of users) {
     await prisma.user.upsert({
       where: { email: user.email },
@@ -16,6 +17,7 @@ async function main() {
   }
   console.log({ users });
 
+  // await prisma.category.deleteMany({});
   for (let category of categories) {
     await prisma.category.upsert({
       where: { id: category.id },

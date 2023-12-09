@@ -15,9 +15,7 @@ CREATE TABLE `Category` (
     `id` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
     `color` VARCHAR(191) NULL,
-    `eventId` INTEGER NOT NULL,
 
-    UNIQUE INDEX `Category_eventId_key`(`eventId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -26,9 +24,8 @@ CREATE TABLE `Title` (
     `id` VARCHAR(191) NOT NULL,
     `categoryId` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
-    `form_url` VARCHAR(191) NOT NULL,
+    `form_url` VARCHAR(191) NULL,
 
-    UNIQUE INDEX `Title_categoryId_key`(`categoryId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -37,15 +34,17 @@ CREATE TABLE `Event` (
     `id` VARCHAR(191) NOT NULL,
     `categoryId` VARCHAR(191) NOT NULL,
     `titleId` VARCHAR(191) NOT NULL,
-    `dateTime` DATETIME(3) NOT NULL,
+    `startAt` DATETIME(3) NOT NULL,
+    `endAt` DATETIME(3) NOT NULL,
     `place` VARCHAR(191) NOT NULL,
     `target` VARCHAR(191) NOT NULL,
-    `maximumParticipant` INTEGER NOT NULL,
+    `maximumParticipant` INTEGER NULL,
     `fee` INTEGER NOT NULL,
-    `imageUrl` VARCHAR(191) NOT NULL,
+    `imageUrl` VARCHAR(191) NULL,
     `description` VARCHAR(191) NOT NULL,
-    `createdAt` DATETIME(3) NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME(3) NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `published` BOOLEAN NOT NULL DEFAULT false,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -68,7 +67,7 @@ ALTER TABLE `Event` ADD CONSTRAINT `Event_categoryId_fkey` FOREIGN KEY (`categor
 ALTER TABLE `Event` ADD CONSTRAINT `Event_titleId_fkey` FOREIGN KEY (`titleId`) REFERENCES `Title`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `EventUser` ADD CONSTRAINT `EventUser_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `EventUser` ADD CONSTRAINT `EventUser_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `EventUser` ADD CONSTRAINT `EventUser_eventId_fkey` FOREIGN KEY (`eventId`) REFERENCES `Event`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
