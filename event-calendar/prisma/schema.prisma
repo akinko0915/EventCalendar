@@ -26,17 +26,16 @@ model Category{
   name            String
   color           String?
 
-  eventId         Int? @unique
   events          Event[]
   titles          Title[]
 }
 
 model Title{
   id              String @id @default(cuid())
-  categoryId      String @unique
+  categoryId      String 
   category        Category @relation(fields: [categoryId], references: [id])
   name            String
-  form_url        String
+  form_url        String?
   events          Event[]
 }
 
@@ -47,26 +46,25 @@ model Event{
 
   titleId         String
   title           Title @relation(fields:[titleId], references: [id])
-
-  date            DateTime 
+ 
   startAt         DateTime
   endAt           DateTime
   place           String
   target          String
-  maximumParticipant   Int
+  maximumParticipant   Int?
   fee             Int
   imageUrl        String?
   description     String
   
   participants    EventUser[]
-  createdAt       DateTime?   @default(now())
-  updatedAt       DateTime?   @updatedAt
-  published       Boolean?  @default(false)
+  createdAt       DateTime   @default(now()) @map("created_at")
+  updatedAt       DateTime   @default(now()) @updatedAt @map("updated_at")
+  published       Boolean   @default(false)
 }
 
 model EventUser{
   userId          String
-  user            User @relation(fields: [userId], references: [id])
+  user            User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   
   eventId         String
   event           Event @relation(fields: [eventId], references:[id])
