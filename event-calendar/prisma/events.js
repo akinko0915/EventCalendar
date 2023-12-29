@@ -2,7 +2,7 @@ import { titles } from "./titles.js";
 import { categories } from "./categories.js";
 
 function createDate(year, month, day, hours = 0, minutes = 0) {
-  return new Date(year, month + 1, day, hours, minutes);
+  return new Date(year, month, day, hours, minutes);
 }
 
 export const events = [

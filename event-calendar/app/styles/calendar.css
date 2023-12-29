@@ -1,0 +1,130 @@
+:root {
+  /* Define CSS variables */
+  --fc-border-color: none;
+}
+
+.fc-direction-ltr {
+  direction: ltr;
+  text-align: left;
+  max-width: 1250px;
+  margin: 0 0 0 auto;
+}
+
+.fc-toolbar-chunk {
+  display: none;
+}
+
+.fc-today-button .fc-button .fc-button-primary {
+  display: none;
+}
+
+.fc-scroller-harness {
+  margin-top: 2rem;
+}
+
+.fc-day-sun .fc-daygrid-day-number {
+  position: relative;
+  color: #fff;
+  font-size: 25px;
+  font-weight: bold;
+  z-index: 2;
+  background: #dc143c;
+  border-radius: 50%;
+  height: 45px;
+  width: 45px;
+  text-align: center;
+}
+
+.fc-day-sun .fc-daygrid-day-number:hover {
+  position: relative;
+  color: #dc143c;
+  font-size: 25px;
+  font-weight: bold;
+  z-index: 2;
+  background: #fff;
+  border-radius: 50%;
+  height: 45px;
+  width: 45px;
+  text-align: center;
+}
+
+.fc-day-sat .fc-daygrid-day-number {
+  position: relative;
+  color: #fff;
+  font-size: 25px;
+  font-weight: bold;
+  z-index: 2;
+  background: #0000cd;
+  border-radius: 50%;
+  height: 45px;
+  width: 45px;
+  text-align: center;
+}
+
+.fc-day-sat .fc-daygrid-day-number:hover {
+  position: relative;
+  color: #0000cd;
+  font-size: 25px;
+  font-weight: bold;
+  z-index: 2;
+  background: #fff;
+  border-radius: 50%;
+  height: 45px;
+  width: 45px;
+  text-align: center;
+}
+
+.fc-daygrid-day-number {
+  position: relative;
+  color: #fff;
+  font-size: 25px;
+  font-weight: bold;
+  z-index: 2;
+  background: #ffb803;
+  border-radius: 50%;
+  height: 45px;
+  width: 45px;
+  text-align: center;
+}
+
+.fc-daygrid-day-number:hover {
+  position: relative;
+  color: #ffb803;
+  font-size: 25px;
+  font-weight: bold;
+  z-index: 2;
+  background: #fff;
+  border-radius: 50%;
+  height: 45px;
+  width: 45px;
+  text-align: center;
+}
+
+.fc-scroller {
+  overflow-y: hidden;
+}
+
+th {
+  height: 30px;
+}
+
+.fc .fc-scrollgrid-section-sticky > * {
+  position: relative;
+  background: none;
+  color: black;
+  text-align: center;
+  font-size: 25px;
+}
+
+.fc .fc-daygrid-day-frame {
+  min-height: 150px;
+  min-width: 100px;
+}
+
+.fc .fc-daygrid-day-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 100%;
+}
