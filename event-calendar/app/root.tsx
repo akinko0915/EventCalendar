@@ -1,7 +1,10 @@
 // root.tsx
 import React, { useContext, useEffect } from "react";
 import { withEmotionCache } from "@emotion/react";
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { MetaFunction, LinksFunction } from "@remix-run/node";
+import calendarStyle from "~/styles/calendar.css";
+import { ServerStyleContext, ClientStyleContext } from "./context";
 import {
   Links,
   LiveReload,
@@ -10,10 +13,6 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import { MetaFunction, LinksFunction } from "@remix-run/node";
-import calendarStyle from "~/styles/calendar.css";
-
-import { ServerStyleContext, ClientStyleContext } from "./context";
 
 export const meta: MetaFunction = () => {
   return [
@@ -34,6 +33,16 @@ export let links: LinksFunction = () => {
     { rel: "stylesheet", href: calendarStyle },
   ];
 };
+
+const theme = extendTheme({
+  colors: {
+    brand: {
+      "50": "#FFEFD7",
+      "100": "#FFF2D2",
+      "200": "#FFB803",
+    },
+  },
+});
 
 interface DocumentProps {
   children: React.ReactNode;
@@ -85,7 +94,7 @@ const Document = withEmotionCache(
 export default function App() {
   return (
     <Document>
-      <ChakraProvider>
+      <ChakraProvider theme={theme}>
         <Outlet />
       </ChakraProvider>
     </Document>

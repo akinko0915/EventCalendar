@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Calendar from "./Calendar";
 import Month from "./Month.js";
+import CalendarModal from "./calendar-modal.js";
 
 export default function Main({ events }) {
   const calendarRef = useRef(null);
@@ -71,6 +72,7 @@ export default function Main({ events }) {
         nextMonth={nextMonth}
       />
       <Calendar events={events} ref={calendarRef} />
+      <CalendarModal />
     </div>
   );
 }
