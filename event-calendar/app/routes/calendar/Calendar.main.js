@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
-import Calendar from "./Calendar";
-import Month from "./Month.js";
-import CalendarModal from "./calendar-modal.js";
+import CalendarDisplay from "./Calendar.display";
+import CalendarMonth from "./Calendar.month.js";
+import CalendarModal from "./Calendar.modal";
 
-export default function Main({ events }) {
+export default function CalendarMain({ events }) {
   const calendarRef = useRef(null);
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1);
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
@@ -61,7 +61,7 @@ export default function Main({ events }) {
 
   return (
     <div style={containerStyle}>
-      <Month
+      <CalendarMonth
         year={currentYear}
         month={currentMonth}
         onNext={handleNextMonth}
@@ -71,7 +71,7 @@ export default function Main({ events }) {
         preMonth={preMonth}
         nextMonth={nextMonth}
       />
-      <Calendar events={events} ref={calendarRef} />
+      <CalendarDisplay events={events} ref={calendarRef} />
       <CalendarModal />
     </div>
   );

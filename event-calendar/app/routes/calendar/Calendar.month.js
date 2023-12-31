@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRightLong, faLeftLong } from "@fortawesome/free-solid-svg-icons";
 
-const Month = ({
+const CalendarMonth = ({
   year,
   month,
   preMonth,
@@ -64,4 +64,4 @@ const Month = ({
   );
 };
 
-export default Month;
+export default CalendarMonth;

@@ -1,7 +1,13 @@
 // root.tsx
 import React, { useContext, useEffect } from "react";
 import { withEmotionCache } from "@emotion/react";
-import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import {
+  Box,
+  ChakraProvider,
+  Grid,
+  GridItem,
+  extendTheme,
+} from "@chakra-ui/react";
 import { MetaFunction, LinksFunction } from "@remix-run/node";
 import calendarStyle from "~/styles/calendar.css";
 import { ServerStyleContext, ClientStyleContext } from "./context";
@@ -13,6 +19,9 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+import Nav from "./routes/Nav";
+import Header from "./routes/Header";
+import Footer from "./routes/Footer";
 
 export const meta: MetaFunction = () => {
   return [
@@ -47,6 +56,20 @@ const theme = extendTheme({
 interface DocumentProps {
   children: React.ReactNode;
 }
+const CircleComponent = () => {
+  return (
+    <Box
+      position="fixed"
+      width="2000px"
+      height="2000px"
+      backgroundColor="#FFF2D2"
+      borderRadius="50%"
+      top="0"
+      left="0"
+      transform="translate(30%, -15%)"
+    />
+  );
+};
 
 const Document = withEmotionCache(
   ({ children }: DocumentProps, emotionCache) => {
@@ -95,7 +118,33 @@ export default function App() {
   return (
     <Document>
       <ChakraProvider theme={theme}>
-        <Outlet />
+        <Grid
+          templateAreas={`"nav header"
+                    "nav main"
+                    "nav footer"`}
+          gridTemplateColumns={"300px 1fr"}
+          h="auto"
+          gap={1}
+          color="blackAlpha.700"
+          fontWeight="bold"
+          bg="#FED495"
+          position="relative"
+          minHeight="100vh"
+        >
+          <CircleComponent />
+          <GridItem pl="2" bg="#FFB803" area={"nav"}>
+            <Nav />
+          </GridItem>
+          <GridItem pl="2" area={"header"}>
+            <Header />
+          </GridItem>
+          <GridItem pl="2" area={"main"}>
+            <Outlet />
+          </GridItem>
+          <GridItem pl="2" area={"footer"}>
+            <Footer />
+          </GridItem>
+        </Grid>
       </ChakraProvider>
     </Document>
   );

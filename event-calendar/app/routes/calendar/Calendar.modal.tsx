@@ -14,7 +14,7 @@ import {
   GridItem,
 } from "@chakra-ui/react";
 import { useEffect } from "react";
-import type { CalendarEvent } from "./Calendar";
+import type { CalendarEvent } from "./Calendar.display";
 
 type CalendarModalProps = {
   event: CalendarEvent | null;

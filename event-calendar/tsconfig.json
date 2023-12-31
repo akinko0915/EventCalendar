@@ -4,9 +4,9 @@
     "**/*.ts",
     "**/*.tsx",
     "app/root.jsx",
-    "app/routes/main.js",
+    "app/routes/calendar/Calendar.main.js",
     "app/routes/Events.js",
-    "app/routes/calendar-modal.tsx"
+    "app/routes/calendar/Calendar.modal.tsx"
   ],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
