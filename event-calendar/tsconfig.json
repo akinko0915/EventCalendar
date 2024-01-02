@@ -6,7 +6,8 @@
     "app/root.jsx",
     "app/routes/calendar/Calendar.main.js",
     "app/routes/Events.js",
-    "app/routes/calendar/Calendar.modal.tsx"
+    "app/routes/calendar/Calendar.modal.tsx",
+    "app/routes/RouteHistory.jsx"
   ],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],

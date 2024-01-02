@@ -120,8 +120,8 @@ export default function App() {
       <ChakraProvider theme={theme}>
         <Grid
           templateAreas={`"nav header"
-                    "nav main"
-                    "nav footer"`}
+                      "nav main"
+                      "nav footer"`}
           gridTemplateColumns={"300px 1fr"}
           h="auto"
           gap={1}
@@ -132,7 +132,7 @@ export default function App() {
           minHeight="100vh"
         >
           <CircleComponent />
-          <GridItem pl="2" bg="#FFB803" area={"nav"}>
+          <GridItem bg="#FFB803" area={"nav"}>
             <Nav />
           </GridItem>
           <GridItem pl="2" area={"header"}>

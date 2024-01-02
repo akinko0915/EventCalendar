@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import type { CalendarEvent } from "./Calendar.display";
+import { Link } from "@remix-run/react";
 
 type CalendarModalProps = {
   event: CalendarEvent | null;
@@ -106,9 +107,11 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ event, onClose }) => {
 
           <ModalFooter>
             {event && isEventInFuture(event.endAt) && (
-              <Button textColor="white" bg="brand.200" mr={3}>
-                Detail
-              </Button>
+              <Link to="/detail" state={{ some: "detail" }}>
+                <Button textColor="white" bg="brand.200" mr={3}>
+                  Detail
+                </Button>
+              </Link>
             )}
           </ModalFooter>
         </ModalContent>
