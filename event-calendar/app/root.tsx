@@ -1,7 +1,16 @@
 // root.tsx
 import React, { useContext, useEffect } from "react";
 import { withEmotionCache } from "@emotion/react";
-import { ChakraProvider } from "@chakra-ui/react";
+import {
+  Box,
+  ChakraProvider,
+  Grid,
+  GridItem,
+  extendTheme,
+} from "@chakra-ui/react";
+import { MetaFunction, LinksFunction } from "@remix-run/node";
+import calendarStyle from "~/styles/calendar.css";
+import { ServerStyleContext, ClientStyleContext } from "./context";
 import {
   Links,
   LiveReload,
@@ -10,9 +19,9 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import { MetaFunction, LinksFunction } from "@remix-run/node";
-
-import { ServerStyleContext, ClientStyleContext } from "./context";
+import Nav from "./routes/Nav";
+import Header from "./routes/Header";
+import Footer from "./routes/Footer";
 
 export const meta: MetaFunction = () => {
   return [
@@ -30,12 +39,37 @@ export let links: LinksFunction = () => {
       rel: "stylesheet",
       href: "https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap",
     },
+    { rel: "stylesheet", href: calendarStyle },
   ];
 };
+
+const theme = extendTheme({
+  colors: {
+    brand: {
+      "50": "#FFEFD7",
+      "100": "#FFF2D2",
+      "200": "#FFB803",
+    },
+  },
+});
 
 interface DocumentProps {
   children: React.ReactNode;
 }
+const CircleComponent = () => {
+  return (
+    <Box
+      position="fixed"
+      width="2000px"
+      height="2000px"
+      backgroundColor="#FFF2D2"
+      borderRadius="50%"
+      top="0"
+      left="0"
+      transform="translate(30%, -15%)"
+    />
+  );
+};
 
 const Document = withEmotionCache(
   ({ children }: DocumentProps, emotionCache) => {
@@ -83,8 +117,34 @@ const Document = withEmotionCache(
 export default function App() {
   return (
     <Document>
-      <ChakraProvider>
-        <Outlet />
+      <ChakraProvider theme={theme}>
+        <Grid
+          templateAreas={`"nav header"
+                      "nav main"
+                      "nav footer"`}
+          gridTemplateColumns={"300px 1fr"}
+          h="auto"
+          gap={1}
+          color="blackAlpha.700"
+          fontWeight="bold"
+          bg="#FED495"
+          position="relative"
+          minHeight="100vh"
+        >
+          <CircleComponent />
+          <GridItem bg="#FFB803" area={"nav"}>
+            <Nav />
+          </GridItem>
+          <GridItem pl="2" area={"header"}>
+            <Header />
+          </GridItem>
+          <GridItem pl="2" area={"main"}>
+            <Outlet />
+          </GridItem>
+          <GridItem pl="2" area={"footer"}>
+            <Footer />
+          </GridItem>
+        </Grid>
       </ChakraProvider>
     </Document>
   );
