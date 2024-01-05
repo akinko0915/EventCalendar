@@ -107,7 +107,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ event, onClose }) => {
 
           <ModalFooter>
             {event && isEventInFuture(event.endAt) && (
-              <Link to="/detail" state={{ some: "detail" }}>
+              <Link to="/detail" state={{ event }}>
                 <Button textColor="white" bg="brand.200" mr={3}>
                   Detail
                 </Button>

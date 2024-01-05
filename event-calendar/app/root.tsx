@@ -49,6 +49,8 @@ const theme = extendTheme({
       "50": "#FFEFD7",
       "100": "#FFF2D2",
       "200": "#FFB803",
+      "300": "#dc143c",
+      "400": "#042D5B",
     },
   },
 });
@@ -67,6 +69,7 @@ const CircleComponent = () => {
       top="0"
       left="0"
       transform="translate(30%, -15%)"
+      zIndex="-1"
     />
   );
 };
@@ -130,6 +133,7 @@ export default function App() {
           bg="#FED495"
           position="relative"
           minHeight="100vh"
+          zIndex="0"
         >
           <CircleComponent />
           <GridItem bg="#FFB803" area={"nav"}>
