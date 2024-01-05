@@ -14,7 +14,7 @@ export async function login(
   });
 
   if (!user || !(await bcrypt.compare(password, user.password))) {
-    return null;
+    throw new Error("not found");
   }
 
   // Return the user's ID if valid

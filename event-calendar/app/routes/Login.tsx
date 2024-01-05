@@ -11,13 +11,13 @@ import {
   Stack,
   StackDivider,
   FormErrorMessage,
-  // FormHelperText,
 } from "@chakra-ui/react";
-import { ActionFunction, json } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
 import { authenticator } from "~/services/auth.server";
 
-export const action: ActionFunction = async ({ request }) => {
+export async function action({ request }: ActionFunctionArgs) {
   try {
     // Authenticate the user using the form strategy
     return await authenticator.authenticate("user-pass", request, {
@@ -27,7 +27,7 @@ export const action: ActionFunction = async ({ request }) => {
   } catch (error: any) {
     return json({ error: error.message });
   }
-};
+}
 
 const Login: React.FC = () => {
   const actionData = useActionData<{ error?: boolean }>();

@@ -7,22 +7,20 @@ export type User = {
   id: string;
   role: string;
   name: string;
+  belonging?: string;
+  sex?: string;
   email: string;
 };
 
+// Create an Authenticator instance using session storage
 export const authenticator = new Authenticator<User>(sessionStorage);
 
+// Use the FormStrategy to handle form-based authentication
 authenticator.use(
   new FormStrategy(async ({ form }) => {
     const email = form.get("email");
     const password = form.get("password");
-
-    if (typeof email !== "string" || typeof password !== "string") {
-      throw new Error("Form not submitted correctly.");
-    }
-
-    // Here, you'll call your login function to validate the user
-    const user = await login(email, password);
+    const user = await login(String(email), String(password));
 
     if (!user) {
       throw new Error("Invalid credentials");
