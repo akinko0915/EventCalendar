@@ -1,10 +1,8 @@
 import { useLoaderData } from "@remix-run/react";
 import React from "react";
 import CalendarMain from "./Calendar.main";
-
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-
 import { db } from "~/db.server";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {

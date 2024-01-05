@@ -16,6 +16,8 @@ model User{
   id              String @id @default(cuid())
   role            Role  @default(USER)
   name            String
+  belonging       String?
+  sex             String?
   email           String @unique
   password        String
   events          EventUser[] 
@@ -50,9 +52,11 @@ model Event{
   startAt         DateTime
   endAt           DateTime
   place           String
+  placeUrl        String?
   target          String
   maximumParticipant   Int?
   fee             Int
+  discount        Int?
   imageUrl        String?
   description     String
   
