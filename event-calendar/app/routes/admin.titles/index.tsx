@@ -18,21 +18,67 @@ import TitleEditModal from "./TitleEdit.modal";
 import TitleDeleteModal from "./TitleDelete.modal";
 import { useLoaderData } from "@remix-run/react";
 import { useState } from "react";
-import type { LoaderFunctionArgs } from "@remix-run/node";
+import type { DataFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { db } from "~/db.server";
+import { withZod } from "@remix-validated-form/with-zod";
+import { z } from "zod";
+import { validationError } from "remix-validated-form";
+import { createTitle } from "~/models/title.server";
+import { getCategories } from "~/models/category.server";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
-  return json(
-    await db.title.findMany({
-      where: {
-        id: params.id,
+  const titles = await db.title.findMany({
+    where: {
+      id: params.id,
+    },
+    include: {
+      category: true,
+    },
+  });
+
+  const categories = await getCategories();
+
+  return json({ titles, categories });
+};
+
+export const validator = withZod(
+  z.object({
+    categoryId: z.string().min(1, { message: "category id is required" }),
+    name: z.string().min(1, { message: "name is required" }),
+    form_url: z.string().optional(),
+  })
+);
+
+export const action = async ({ request }: DataFunctionArgs) => {
+  const data = await validator.validate(await request.formData());
+  if (data.error) return validationError(data.error);
+  const { categoryId, name, form_url } = data.data;
+
+  try {
+    const newTitle = await createTitle({
+      categoryId,
+      name,
+      form_url,
+    });
+
+    return json({
+      title: `${newTitle.name} is created`,
+      details: `the category is ${newTitle.categoryId}. FormURL is ${newTitle.form_url}`,
+    });
+  } catch (error) {
+    console.log("Error creating title", error);
+
+    return json(
+      {
+        title: "Error",
+        details: "An error occurred while creating title",
       },
-      include: {
-        category: true,
-      },
-    })
-  );
+      { status: 500 }
+    );
+  } finally {
+    await db.$disconnect();
+  }
 };
 
 const TableStyle = {
@@ -40,8 +86,9 @@ const TableStyle = {
   fontWeight: "bold",
   fontSize: "20px",
 };
+
 function Title() {
-  const titles = useLoaderData<typeof loader>();
+  const { titles, categories } = useLoaderData<typeof loader>();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -67,7 +114,7 @@ function Title() {
             </Button>
           </GridItem>
           <GridItem>
-            <TableContainer width="1100px">
+            <TableContainer width="1300px">
               <Table variant="simple" bg="white" borderColor="brand.200">
                 <Thead bg="brand.200" textColor="white">
                   <Tr>
@@ -121,6 +168,7 @@ function Title() {
         <TitleAddModal
           isOpen={isAddModalOpen}
           onClose={() => setIsAddModalOpen(false)}
+          categories={categories}
         />
         <TitleEditModal
           isOpen={isEditModalOpen}

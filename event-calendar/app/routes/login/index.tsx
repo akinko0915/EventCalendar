@@ -16,21 +16,23 @@ import type { ActionFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
 import { authenticator } from "~/services/auth.server";
+// import { getSession, commitSession } from "~/services/session.server";
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function action({ context, request }: ActionFunctionArgs) {
   try {
     // Authenticate the user using the form strategy
-    return await authenticator.authenticate("user-pass", request, {
+    return await authenticator.authenticate("form", request, {
       successRedirect: "/calendar", // redirect to home on success
-      failureRedirect: "/login", // redirect back to login on failure
+      failureRedirect: "/login",
+      context, // redirect back to login on failure
     });
   } catch (error: any) {
     return json({ error: error.message });
   }
 }
 
-const Login: React.FC = () => {
-  const actionData = useActionData<{ error?: boolean }>();
+export const Login = () => {
+  const actionData = useActionData<typeof action>();
   return (
     <>
       <Box

@@ -19,9 +19,9 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import Nav from "./routes/Nav";
-import Header from "./routes/Header";
-import Footer from "./routes/Footer";
+import Nav from "./components/basic-uis/Nav";
+import Header from "./components/basic-uis/Header";
+import Footer from "./components/basic-uis/Footer";
 
 export const meta: MetaFunction = () => {
   return [

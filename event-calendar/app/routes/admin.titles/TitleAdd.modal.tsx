@@ -6,75 +6,92 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  Button,
   Center,
   Grid,
   GridItem,
-  FormControl,
-  FormLabel,
-  Input,
-  Select,
-  // FormErrorMessage,
-  // FormHelperText,
 } from "@chakra-ui/react";
+import { useActionData } from "@remix-run/react";
+import { ValidatedForm } from "remix-validated-form";
+import { FormInput } from "~/components/form/FormInput";
+import { MySubmitButton } from "~/components/form/SubmitButton";
+import { validator } from "./index";
+import { FormAlert } from "~/components/form/FormAlert";
+import { Select, SelectGroup } from "~/components/form/Select";
+import { useEffect, useState } from "react";
 
 interface TitleAddModalProps {
   isOpen: boolean;
   onClose: () => void;
+  categories: { id: string; name: string }[];
 }
 
-const TitleAddModal: React.FC<TitleAddModalProps> = ({ isOpen, onClose }) => {
+export type AlertProps = {
+  variant: "info" | "warning" | "success" | "error";
+  title: string;
+  details: string;
+};
+
+const TitleAddModal: React.FC<TitleAddModalProps> = ({
+  isOpen,
+  onClose,
+  categories,
+}) => {
+  const [categoryOptions, setCategoryOptions] = useState<
+    { value: string; label: string }[]
+  >([]);
+
+  const data = useActionData<AlertProps>();
+
+  useEffect(() => {
+    const transformedCategories = categories.map((category) => ({
+      value: category.id,
+      label: category.name,
+    }));
+
+    setCategoryOptions(transformedCategories);
+  }, [categories]);
+
   return (
     <>
       <Modal size="lg" isCentered isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader fontSize={30} fontWeight={700} textColor="green">
-            Add Title
-          </ModalHeader>
+          <ValidatedForm validator={validator} method="post">
+            <ModalHeader fontSize={30} fontWeight={700} textColor="green">
+              Add Title
+            </ModalHeader>
 
-          <ModalCloseButton />
-          <ModalBody>
-            <Grid gap={4}>
-              <GridItem>
-                <Center>
-                  <FormControl>
-                    <FormLabel>Category</FormLabel>
-                    <Select placeholder="Select category">
-                      <option>1: 勉強会</option>
-                      <option>2: 季節イベント</option>
-                    </Select>
-                  </FormControl>
-                </Center>
-              </GridItem>
-              <GridItem>
-                <Center>
-                  <FormControl>
-                    <FormLabel>Title Name</FormLabel>
-                    <Input type="name" />
-                  </FormControl>
-                </Center>
-              </GridItem>
-              <GridItem>
-                <Center>
-                  <FormControl>
-                    <FormLabel>Form Url</FormLabel>
-                    <Input type="text" />
-                  </FormControl>
-                </Center>
-              </GridItem>
-            </Grid>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button
-              bg="brand.200"
-              textColor="white"
-              _hover={{ bg: "white", textColor: "brand.200" }}
-            >
-              Add
-            </Button>
-          </ModalFooter>
+            <ModalCloseButton />
+            <ModalBody>
+              <Grid gap={4}>
+                <GridItem>
+                  <SelectGroup name="categoryId" label="category">
+                    <Select name="categoryId" options={categoryOptions} />
+                  </SelectGroup>
+                </GridItem>
+                <GridItem>
+                  <Center>
+                    <FormInput name="name" label="name" />
+                  </Center>
+                </GridItem>
+                <GridItem>
+                  <Center>
+                    <FormInput name="form_url" label="form_url" />
+                  </Center>
+                </GridItem>
+              </Grid>
+            </ModalBody>
+            <ModalFooter>
+              <MySubmitButton />
+              {data && (
+                <FormAlert
+                  variant="info"
+                  title={data.title}
+                  details={data.details}
+                />
+              )}
+            </ModalFooter>
+          </ValidatedForm>
         </ModalContent>
       </Modal>
     </>

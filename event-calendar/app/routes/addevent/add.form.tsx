@@ -1,34 +1,42 @@
-import {
-  Box,
-  Button,
-  FormControl,
-  FormLabel,
-  Grid,
-  GridItem,
-  Input,
-  Textarea,
-  Text,
-  Select,
-} from "@chakra-ui/react";
-import { Form } from "@remix-run/react";
+import { Box, Grid, GridItem } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { ValidatedForm } from "remix-validated-form";
+import { FormInput } from "~/components/form/FormInput";
+import { SelectGroup, Select } from "~/components/form/Select";
+import { MySubmitButton } from "~/components/form/SubmitButton";
+import { validator } from "../admin.events";
 
-export default function AddForm() {
+interface AddFormProps {
+  additionalData: {
+    categories: { id: string; name: string }[];
+    titles: { id: string; name: string }[];
+  };
+}
+
+export default function AddForm({ additionalData }: AddFormProps) {
+  const [categoryOptions, setCategoryOptions] = useState<
+    { value: string; label: string }[]
+  >([]);
+  const [titleOptions, setTitleOptions] = useState<
+    { value: string; label: string }[]
+  >([]);
+
+  useEffect(() => {
+    const transformedCategories = additionalData.categories.map((category) => ({
+      value: category.id,
+      label: category.name,
+    }));
+    const transformedTitles = additionalData.titles.map((title) => ({
+      value: title.id,
+      label: title.name,
+    }));
+
+    setCategoryOptions(transformedCategories);
+    setTitleOptions(transformedTitles);
+  }, [additionalData]);
   return (
     <>
-      <Box
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        mt="0"
-        w="100%"
-        textColor="green"
-        marginBottom={20}
-      >
-        <Text fontWeight="bolder" fontSize="40px">
-          Add Event
-        </Text>
-      </Box>
-      <Form method="post">
+      <ValidatedForm validator={validator} method="post">
         <Box
           display="flex"
           alignItems="center"
@@ -43,103 +51,38 @@ export default function AddForm() {
             w="1200px"
           >
             <GridItem rowSpan={1} colSpan={1} bg="none">
-              <FormControl>
-                <FormLabel htmlFor="text">Category</FormLabel>
-                <Select
-                  placeholder="Select category"
-                  bg="white"
-                  marginBottom={10}
-                >
-                  <option>勉強会</option>
-                  <option>季節イベント</option>
-                </Select>
+              <SelectGroup name="categoryId" label="category">
+                <Select name="categoryId" options={categoryOptions} />
+              </SelectGroup>
 
-                <FormLabel htmlFor="title">Title</FormLabel>
-                <Select placeholder="Select Title" bg="white" marginBottom={10}>
-                  <option>Joyful English Meetup</option>
-                  <option>IPPIN</option>
-                </Select>
-                <FormLabel htmlFor="startAt">Start At</FormLabel>
-                <Input
-                  type="datetime-local"
-                  name="date"
-                  id="date"
-                  required
-                  bg="white"
-                  marginBottom={10}
-                />
-                <FormLabel htmlFor="endAt">End At</FormLabel>
-                <Input
-                  type="datetime-local"
-                  name="time"
-                  id="date"
-                  required
-                  bg="white"
-                  marginBottom={10}
-                />
-                <FormLabel htmlFor="place">Place</FormLabel>
-                <Input
-                  type="text"
-                  name="time"
-                  id="date"
-                  required
-                  bg="white"
-                  marginBottom={10}
-                />
-                <FormLabel htmlFor="placeUrl">Place Url</FormLabel>
-                <Input
-                  type="text"
-                  name="time"
-                  id="date"
-                  required
-                  bg="white"
-                  marginBottom={10}
-                />
-              </FormControl>
+              <SelectGroup name="titleId" label="title">
+                <Select name="titleId" options={titleOptions} />
+              </SelectGroup>
+              <FormInput
+                name="startAt"
+                label="Start at"
+                type="datetime-local"
+              />
+              <FormInput name="endAt" label="End at" type="datetime-local" />
+              <FormInput name="place" label="Place" />
+              <FormInput name="placeUrl" label="placeUrl" />
             </GridItem>
+
             <GridItem rowSpan={1} colSpan={1} bg="none">
-              <FormControl>
-                <FormLabel htmlFor="target">Target</FormLabel>
-                <Input
-                  type="text"
-                  name="time"
-                  id="date"
-                  required
-                  bg="white"
-                  marginBottom={10}
-                />
-                <FormLabel htmlFor="maximumParticipant">
-                  Maximum Participant
-                </FormLabel>
-                <Input
-                  type="number"
-                  name="time"
-                  id="date"
-                  required
-                  bg="white"
-                  marginBottom={10}
-                />
-                <FormLabel htmlFor="fee">Fee</FormLabel>
-                <Input
-                  type="number"
-                  name="time"
-                  id="date"
-                  required
-                  bg="white"
-                  marginBottom={10}
-                />
-                <FormLabel htmlFor="imageUrl">Image</FormLabel>
-                <Input
-                  type="file"
-                  name="time"
-                  id="date"
-                  required
-                  bg="white"
-                  marginBottom={10}
-                />
-                <FormLabel htmlFor="description">Description</FormLabel>
-                <Textarea bg="white" size="xl" />
-              </FormControl>
+              <FormInput name="target" label="target" />
+              <FormInput
+                name="maximumParticipant"
+                label="Maximum Participant"
+                type="number"
+              />
+              <FormInput name="fee" label="fee" type="number" />
+              <FormInput name="discount" label="discount" type="number" />
+              <FormInput name="imageUrl" label="image Url" type="file" />
+              <FormInput
+                name="description"
+                label="Description"
+                type="textarea"
+              />
             </GridItem>
           </Grid>
         </Box>
@@ -149,19 +92,11 @@ export default function AddForm() {
           justifyContent="center"
           mt="0"
           w="100%"
+          marginBottom={10}
         >
-          <Button
-            bg="brand.200"
-            textColor="white"
-            _hover={{ bg: "white", textColor: "brand.200" }}
-            marginTop={10}
-            type="submit"
-            marginBottom={20}
-          >
-            Add Event
-          </Button>
+          <MySubmitButton />
         </Box>
-      </Form>
+      </ValidatedForm>
     </>
   );
 }

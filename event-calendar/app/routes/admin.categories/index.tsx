@@ -14,13 +14,17 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useLoaderData } from "@remix-run/react";
+import { withZod } from "@remix-validated-form/with-zod";
 import CategoryAddModal from "./CategoryAdd.modal";
 import CategoryEditModal from "./CategoryEdit.modal";
 import CategoryDeleteModal from "./CategoryDelete.modal";
 import { useState } from "react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import { json, DataFunctionArgs } from "@remix-run/node";
+import { z } from "zod";
 import { db } from "~/db.server";
+import { validationError } from "remix-validated-form";
+import { createCategory } from "~/models/category.server";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   return json(
@@ -31,6 +35,43 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     })
   );
 };
+
+export const validator = withZod(
+  z.object({
+    name: z.string().min(1, { message: "category name is required" }),
+    color: z.string().optional(),
+  })
+);
+export const action = async ({ request }: DataFunctionArgs) => {
+  const data = await validator.validate(await request.formData());
+  if (data.error) return validationError(data.error);
+  const { name, color } = data.data;
+
+  try {
+    const newCategory = await createCategory({
+      name,
+      color,
+    });
+
+    return json({
+      title: `${newCategory.name} is created`,
+      details: `the color of the category is ${newCategory.color}`,
+    });
+  } catch (error) {
+    console.error("Error creating category", error);
+
+    return json(
+      {
+        title: "Error",
+        details: "An error occurred while creating the category.",
+      },
+      { status: 500 }
+    );
+  } finally {
+    await db.$disconnect();
+  }
+};
+
 const TableStyle = {
   color: "white",
   fontWeight: "bold",
