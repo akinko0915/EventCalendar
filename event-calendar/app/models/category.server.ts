@@ -13,13 +13,16 @@ export async function getCategories() {
   });
 }
 
-export async function createCategory(data: { name: string; color: string }) {
+export async function createCategory(data: {
+  name: string;
+  color: string | null;
+}) {
   return db.category.create({ data });
 }
 
 export async function updateCategory(
   id: string,
-  data: { name: string; color: string }
+  data: { name: string; color: string | null }
 ) {
   return db.category.update({ where: { id }, data });
 }

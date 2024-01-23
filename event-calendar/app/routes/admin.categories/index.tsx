@@ -20,11 +20,9 @@ import CategoryEditModal from "./CategoryEdit.modal";
 import CategoryDeleteModal from "./CategoryDelete.modal";
 import { useState } from "react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
-import { json, DataFunctionArgs } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { z } from "zod";
 import { db } from "~/db.server";
-import { validationError } from "remix-validated-form";
-import { createCategory } from "~/models/category.server";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   return json(
@@ -38,50 +36,41 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
 export const validator = withZod(
   z.object({
+    id: z.string().uuid(),
     name: z.string().min(1, { message: "category name is required" }),
-    color: z.string().optional(),
+    color: z.string().nullable(),
   })
 );
-export const action = async ({ request }: DataFunctionArgs) => {
-  const data = await validator.validate(await request.formData());
-  if (data.error) return validationError(data.error);
-  const { name, color } = data.data;
-
-  try {
-    const newCategory = await createCategory({
-      name,
-      color,
-    });
-
-    return json({
-      title: `${newCategory.name} is created`,
-      details: `the color of the category is ${newCategory.color}`,
-    });
-  } catch (error) {
-    console.error("Error creating category", error);
-
-    return json(
-      {
-        title: "Error",
-        details: "An error occurred while creating the category.",
-      },
-      { status: 500 }
-    );
-  } finally {
-    await db.$disconnect();
-  }
-};
 
 const TableStyle = {
   color: "white",
   fontWeight: "bold",
   fontSize: "20px",
 };
+
 function Category() {
   const categories = useLoaderData<typeof loader>();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editCategoryData, setEditCategoryData] = useState<{
+    id: string;
+    name: string;
+    color: string | null;
+  }>({
+    id: "",
+    name: "",
+    color: null, // Initialized as null
+  });
+
+  const openEditModal = (category: {
+    id: string;
+    name: string;
+    color: string | null;
+  }) => {
+    setEditCategoryData(category);
+    setIsEditModalOpen(true);
+  };
 
   return (
     <>
@@ -122,12 +111,12 @@ function Category() {
                       <Td>{category.color}</Td>
                       <Td>
                         <Button
+                          onClick={() => openEditModal(category)}
                           marginRight={10}
                           bg="white"
                           color="blue"
                           _hover={{ color: "white", bg: "blue" }}
                           width="30px"
-                          onClick={() => setIsEditModalOpen(true)}
                         >
                           <FontAwesomeIcon
                             fontSize="30px"
@@ -160,6 +149,9 @@ function Category() {
         <CategoryEditModal
           isOpen={isEditModalOpen}
           onClose={() => setIsEditModalOpen(false)}
+          id={editCategoryData.id}
+          name={editCategoryData.name}
+          color={editCategoryData.color}
         />
         <CategoryDeleteModal
           isOpen={isDeleteModalOpen}

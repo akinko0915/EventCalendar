@@ -10,12 +10,15 @@ import {
   Grid,
   GridItem,
 } from "@chakra-ui/react";
-import { ValidatedForm } from "remix-validated-form";
+import { ValidatedForm, validationError } from "remix-validated-form";
 import { FormInput } from "~/components/form/FormInput";
 import { MySubmitButton } from "~/components/form/SubmitButton";
 import { useActionData } from "@remix-run/react";
 import { FormAlert } from "~/components/form/FormAlert";
 import { validator } from "./index";
+import { createCategory } from "~/models/category.server";
+import { db } from "~/db.server";
+import { DataFunctionArgs, json } from "@remix-run/node";
 
 interface CategoryAddModalProps {
   isOpen: boolean;
@@ -26,6 +29,36 @@ export type AlertProps = {
   variant: "info" | "warning" | "success" | "error";
   title: string;
   details: string;
+};
+
+export const action = async ({ request }: DataFunctionArgs) => {
+  const data = await validator.validate(await request.formData());
+  if (data.error) return validationError(data.error);
+  const { name, color } = data.data;
+
+  try {
+    const newCategory = await createCategory({
+      name,
+      color,
+    });
+
+    return json({
+      title: `${newCategory.name} is created`,
+      details: `the color of the category is ${newCategory.color}`,
+    });
+  } catch (error) {
+    console.error("Error creating category", error);
+
+    return json(
+      {
+        title: "Error",
+        details: "An error occurred while creating the category.",
+      },
+      { status: 500 }
+    );
+  } finally {
+    await db.$disconnect();
+  }
 };
 
 const CategoryAddModal: React.FC<CategoryAddModalProps> = ({
