@@ -13,34 +13,21 @@ import {
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { useLoaderData } from "@remix-run/react";
-import { withZod } from "@remix-validated-form/with-zod";
-import CategoryAddModal from "./CategoryAdd.modal";
-import CategoryEditModal from "./CategoryEdit.modal";
-import CategoryDeleteModal from "./CategoryDelete.modal";
+import { Link, useLoaderData } from "@remix-run/react";
+import CategoryDeleteModal from "./admin.categories.$categoryId.delete.";
 import { useState } from "react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { z } from "zod";
 import { db } from "~/db.server";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
-  return json(
-    await db.category.findMany({
-      where: {
-        id: params.id,
-      },
-    })
-  );
+  const categories = await db.category.findMany({
+    where: {
+      id: params.id,
+    },
+  });
+  return json({ categories: categories || [] });
 };
-
-export const validator = withZod(
-  z.object({
-    id: z.string().uuid(),
-    name: z.string().min(1, { message: "category name is required" }),
-    color: z.string().nullable(),
-  })
-);
 
 const TableStyle = {
   color: "white",
@@ -49,28 +36,8 @@ const TableStyle = {
 };
 
 function Category() {
-  const categories = useLoaderData<typeof loader>();
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const { categories = [] } = useLoaderData<typeof loader>();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [editCategoryData, setEditCategoryData] = useState<{
-    id: string;
-    name: string;
-    color: string | null;
-  }>({
-    id: "",
-    name: "",
-    color: null, // Initialized as null
-  });
-
-  const openEditModal = (category: {
-    id: string;
-    name: string;
-    color: string | null;
-  }) => {
-    setEditCategoryData(category);
-    setIsEditModalOpen(true);
-  };
 
   return (
     <>
@@ -83,14 +50,15 @@ function Category() {
       >
         <Grid>
           <GridItem marginBottom={10}>
-            <Button
-              bg="green"
-              color="white"
-              _hover={{ bg: "white", color: "green" }}
-              onClick={() => setIsAddModalOpen(true)}
-            >
-              Add Category
-            </Button>
+            <Link to="new">
+              <Button
+                bg="green"
+                color="white"
+                _hover={{ bg: "white", color: "green" }}
+              >
+                Add Category
+              </Button>
+            </Link>
           </GridItem>
           <GridItem>
             <TableContainer width="1100px">
@@ -110,19 +78,20 @@ function Category() {
                       <Td>{category.name}</Td>
                       <Td>{category.color}</Td>
                       <Td>
-                        <Button
-                          onClick={() => openEditModal(category)}
-                          marginRight={10}
-                          bg="white"
-                          color="blue"
-                          _hover={{ color: "white", bg: "blue" }}
-                          width="30px"
-                        >
-                          <FontAwesomeIcon
-                            fontSize="30px"
-                            icon={faPenToSquare}
-                          />
-                        </Button>
+                        <Link to={`${category.id}/edit`}>
+                          <Button
+                            marginRight={10}
+                            bg="white"
+                            color="blue"
+                            _hover={{ color: "white", bg: "blue" }}
+                            width="30px"
+                          >
+                            <FontAwesomeIcon
+                              fontSize="30px"
+                              icon={faPenToSquare}
+                            />
+                          </Button>
+                        </Link>
 
                         <Button
                           marginRight={10}
@@ -142,17 +111,6 @@ function Category() {
             </TableContainer>
           </GridItem>
         </Grid>
-        <CategoryAddModal
-          isOpen={isAddModalOpen}
-          onClose={() => setIsAddModalOpen(false)}
-        />
-        <CategoryEditModal
-          isOpen={isEditModalOpen}
-          onClose={() => setIsEditModalOpen(false)}
-          id={editCategoryData.id}
-          name={editCategoryData.name}
-          color={editCategoryData.color}
-        />
         <CategoryDeleteModal
           isOpen={isDeleteModalOpen}
           onClose={() => setIsDeleteModalOpen(false)}
