@@ -16,37 +16,30 @@ export const validator = withZod(
 
 export const action = async ({ request }: DataFunctionArgs) => {
   const formData = await request.formData();
-  const action = formData.get("action");
+  const data = await validator.validate(formData);
+  if (data.error) return validationError(data.error);
+  const { name, color } = data.data;
 
-  if (action === "create") {
-    // Your code for handling the "create" action goes here
-    const data = await validator.validate(formData);
-    if (data.error) return validationError(data.error);
-    const { name, color } = data.data;
+  try {
+    await createCategory({
+      name,
+      color,
+    });
 
-    try {
-      await createCategory({
-        name,
-        color,
-      });
+    return redirect("/admin/categories");
+  } catch (error) {
+    console.error("Error creating category", error);
 
-      return redirect("/admin/categories");
-    } catch (error) {
-      console.error("Error creating category", error);
-
-      return json(
-        {
-          title: "Error",
-          details: "An error occurred while creating the category.",
-        },
-        { status: 500 }
-      );
-    } finally {
-      await db.$disconnect();
-    }
+    return json(
+      {
+        title: "Error",
+        details: "An error occurred while creating the category.",
+      },
+      { status: 500 }
+    );
+  } finally {
+    await db.$disconnect();
   }
-
-  // Your code for handling other actions goes here
 };
 
 function addCategory() {

@@ -2,7 +2,7 @@ import { Box, Grid, GridItem } from "@chakra-ui/react";
 import { ValidatedForm } from "remix-validated-form";
 import { FormInput } from "~/components/form/FormInput";
 import { MySubmitButton } from "~/components/form/SubmitButton";
-import { validator } from "./admin.categories.new";
+import { validator } from "./route";
 import { FormAlert } from "~/components/form/FormAlert";
 import { useActionData } from "@remix-run/react";
 
@@ -17,11 +17,7 @@ export default function AddForm() {
 
   return (
     <>
-      <ValidatedForm
-        validator={validator}
-        method="post"
-        action="/admin/categories/new"
-      >
+      <ValidatedForm validator={validator} method="post">
         <Box
           display="flex"
           alignItems="center"

@@ -11,8 +11,6 @@ import {
   Grid,
   GridItem,
   Text,
-  // FormErrorMessage,
-  // FormHelperText,
 } from "@chakra-ui/react";
 
 interface CategoryDeleteModalProps {

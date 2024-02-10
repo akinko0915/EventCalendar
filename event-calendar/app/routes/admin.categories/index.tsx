@@ -14,7 +14,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Link, useLoaderData } from "@remix-run/react";
-import CategoryDeleteModal from "./admin.categories.$categoryId.delete.";
+import CategoryDeleteModal from "./$categoryId.delete";
 import { useState } from "react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
@@ -50,7 +50,7 @@ function Category() {
       >
         <Grid>
           <GridItem marginBottom={10}>
-            <Link to="new">
+            <Link to="/category/new">
               <Button
                 bg="green"
                 color="white"
@@ -78,7 +78,7 @@ function Category() {
                       <Td>{category.name}</Td>
                       <Td>{category.color}</Td>
                       <Td>
-                        <Link to={`${category.id}/edit`}>
+                        <Link to={`/category/${category.id}/edit`}>
                           <Button
                             marginRight={10}
                             bg="white"

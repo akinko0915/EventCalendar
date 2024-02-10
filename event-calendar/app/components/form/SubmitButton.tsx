@@ -2,7 +2,7 @@ import { Button } from "@chakra-ui/react";
 import { useIsSubmitting } from "remix-validated-form";
 
 export const MySubmitButton = ({ value }: { value: string }) => {
-  const isSubmitting = useIsSubmitting();
+  const isSubmitting = useIsSubmitting(value);
   return (
     <Button
       type="submit"
