@@ -98,9 +98,9 @@ function EditCategory() {
         </Text>
       </Box>
       <ValidatedForm
+        method="post"
         validator={validator}
         action="."
-        method="post"
         defaultValues={{
           name: category.name,
           color: category.color,
