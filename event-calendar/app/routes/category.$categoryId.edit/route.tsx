@@ -6,6 +6,7 @@ import {getCategory, updateCategory} from "~/models/category.server";
 import {Form, useLoaderData} from "@remix-run/react";
 import {Box, Button, FormControl, FormLabel, Input, useToast} from "@chakra-ui/react";
 import { Text } from '@chakra-ui/react';
+import {MySubmitButton} from "~/components/form/SubmitButton";
 
 export const validator = withZod(
     z.object({
@@ -51,6 +52,7 @@ export const loader: LoaderFunction = async ({ params }) => {
 };
 
 export default function EditCategory() {
+
     const { category } = useLoaderData<typeof loader>();
 
     return (
@@ -66,7 +68,7 @@ export default function EditCategory() {
                     <Input name="color" defaultValue={category.color} />
                 </FormControl>
                 <input type="hidden" name="id" value={category.id} />
-                <Button mt={4} colorScheme="blue" type="submit">Submit</Button>
+                <MySubmitButton value="submit" isSubmitting={false} onSubmit={() => {}}/>
             </Form>
         </Box>
     );
