@@ -1,149 +1,75 @@
-import { Box, Grid, GridItem, Text } from "@chakra-ui/react";
-import { getCategory, updateCategory } from "~/models/category.server";
-import {
-  ActionFunction,
-  LoaderFunctionArgs,
-  json,
-  redirect,
-} from "@remix-run/node";
-import { useActionData, useLoaderData, useParams } from "@remix-run/react";
-import { ValidatedForm, validationError } from "remix-validated-form";
-import { db } from "~/db.server";
-import { withZod } from "@remix-validated-form/with-zod";
-import { z } from "zod";
-import { FormInput } from "~/components/form/FormInput";
-import { MySubmitButton } from "~/components/form/SubmitButton";
-import { FormAlert } from "~/components/form/FormAlert";
+import {ActionFunction, json, LoaderFunction, redirect} from "@remix-run/node";
+import {withZod} from "@remix-validated-form/with-zod";
+import {z} from "zod";
+import {validationError} from "remix-validated-form";
+import {getCategory, updateCategory} from "~/models/category.server";
+import {Form, useLoaderData} from "@remix-run/react";
+import {Box, Button, FormControl, FormLabel, Input, useToast} from "@chakra-ui/react";
+import { Text } from '@chakra-ui/react';
+import {MySubmitButton} from "~/components/form/SubmitButton";
 
 export const validator = withZod(
-  z.object({
-    id: z.string().uuid(),
-    name: z.string().min(1, { message: "category name is required" }),
-    color: z.string().nullable(),
-  })
+    z.object({
+        id: z.string().min(1, "ID is required"), // Validates that the ID is a non-empty string
+        name: z.string().min(1, { message: "Category name is required" }),
+        color: z.string().nullable(),
+    })
 );
 
-export type AlertProps = {
-  variant: "info" | "warning" | "success" | "error";
-  title: string;
-  details: string;
-};
-
-export type CategoryEditProps = {
-  category: {
-    id: string;
-    name: string;
-    color: string | null;
-  };
-};
-
 export const action: ActionFunction = async ({ request, params }) => {
-  console.log("action");
-  const categoryId = params.categoryId;
-  const formData = await request.formData();
+    const categoryId = params.categoryId;
+    if (typeof categoryId !== "string") {
+        console.error("Invalid category ID:", categoryId);
+        throw new Response("Invalid category ID", { status: 400 });
+    }
 
-  if (typeof categoryId !== "string") throw Error("invalid id");
+    const result = await validator.validate(await request.formData());
+    if (result.error) return validationError(result.error);
 
-  const data = await validator.validate(formData);
-  if (data.error) return validationError(data.error);
-  const { name, color } = data.data;
+    const { name, color } = result.data;
+    try {
+        await updateCategory(categoryId, { name, color });
+        return redirect("/admin/categories");
+    } catch (error) {
+        console.error("Failed to update category:", error);
+        return json({ error: "Failed to update category" }, { status: 500 });
+    }
+};
 
-  try {
-    await updateCategory(categoryId, { name, color });
-    return redirect("/admin/categories");
-  } catch (error) {
-    console.error("Error updating category", error);
-    return json(
-      {
-        title: "Error",
-        details: "An error occurred while updating the category.",
-      },
-      { status: 500 }
+
+export const loader: LoaderFunction = async ({ params }) => {
+    const categoryId = params.categoryId;
+    if (typeof categoryId !== "string") {
+        throw new Response("Invalid category ID", { status: 400 });
+    }
+
+    const category = await getCategory(categoryId);
+    if (!category) {
+        throw new Response("Category not found", { status: 404 });
+    }
+
+    return json({ category });
+};
+
+export default function EditCategory() {
+
+    const { category } = useLoaderData<typeof loader>();
+
+    return (
+        <Box textAlign="center" p={5}>
+            <Text fontWeight="bold" fontSize="2xl" mb={4}>Edit Category</Text>
+            <Form method="post">
+                <FormControl id="name">
+                    <FormLabel>Category Name</FormLabel>
+                    <Input name="name" defaultValue={category.name} />
+                </FormControl>
+                <FormControl mt={4} id="color">
+                    <FormLabel>Color</FormLabel>
+                    <Input name="color" defaultValue={category.color} />
+                </FormControl>
+                <input type="hidden" name="id" value={category.id} />
+                <MySubmitButton value="submit" isSubmitting={false} onSubmit={() => {}}/>
+            </Form>
+        </Box>
     );
-  } finally {
-    db.$disconnect();
-  }
-};
-
-export const loader = async ({ params }: LoaderFunctionArgs) => {
-  console.log("loader");
-  const categoryId = params.categoryId;
-  if (typeof categoryId !== "string") throw Error("invalid id");
-
-  const category = await getCategory(categoryId);
-  if (!category) throw Error("category not found");
-  return json({ category });
-};
-
-function EditCategory() {
-  const params = useParams();
-  console.log("params", params);
-  const { category } = useLoaderData<typeof loader>();
-  console.log("category", category);
-  const data = useActionData<AlertProps>();
-
-  return (
-    <>
-      <Box
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        mt="0"
-        w="100%"
-        textColor="green"
-        marginBottom={20}
-      >
-        <Text fontWeight="bolder" fontSize="40px">
-          Edit Category
-        </Text>
-      </Box>
-      <ValidatedForm
-        method="post"
-        validator={validator}
-        action="."
-        defaultValues={{
-          name: category.name,
-          color: category.color,
-          id: category.id,
-        }}
-      >
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          mt="0"
-          w="100%"
-        >
-          <Grid templateColumns="repeat(1, 1fr)">
-            <GridItem bg="none">
-              <FormInput name="name" label="category name" />
-            </GridItem>
-            <GridItem bg="none">
-              <FormInput name="color" label="color" />
-            </GridItem>
-            <input type="hidden" name="id" />
-          </Grid>
-        </Box>
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          mt="0"
-          w="100%"
-          marginBottom={10}
-        >
-          <MySubmitButton value="update" />
-          {data && (
-            <FormAlert
-              variant="info"
-              title={data.title}
-              details={data.details}
-            />
-          )}
-        </Box>
-      </ValidatedForm>
-    </>
-  );
 }
-
-export default EditCategory;
