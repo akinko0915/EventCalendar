@@ -2,7 +2,7 @@ import { Box, Grid, GridItem } from "@chakra-ui/react";
 import { ValidatedForm } from "remix-validated-form";
 import { FormInput } from "~/components/form/FormInput";
 import { MySubmitButton } from "~/components/form/SubmitButton";
-import { validator } from "./route";
+import { validator } from ".";
 import { FormAlert } from "~/components/form/FormAlert";
 import { useActionData } from "@remix-run/react";
 
@@ -42,7 +42,13 @@ export default function AddForm() {
           w="100%"
           marginBottom={10}
         >
-          <MySubmitButton value="create" />
+          <MySubmitButton
+            value="Create"
+            isSubmitting={false}
+            onSubmit={() => {}}
+            _hover={{ bg: "white", textColor: "brand.200" }}
+            bg="brand.200"
+          />
           {data && (
             <FormAlert
               variant="info"
