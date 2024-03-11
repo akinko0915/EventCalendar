@@ -26,7 +26,7 @@ export const action = async ({ request }: DataFunctionArgs) => {
       color,
     });
 
-    return redirect("/admin/categories");
+    return redirect("/admin/categories/1");
   } catch (error) {
     console.error("Error creating category", error);
 

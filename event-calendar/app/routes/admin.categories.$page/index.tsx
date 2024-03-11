@@ -10,6 +10,8 @@ import {
   Button,
   Grid,
   GridItem,
+  HStack,
+  Link as ChakraLink,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -20,13 +22,23 @@ import { db } from "~/db.server";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   console.log("Loader: Fetching categories", params);
-  const categories = await db.category.findMany({
-    where: {
-      id: params.id,
-    },
-  });
+  const page = parseInt(params.page ?? "", 10) || 1;
+  const rowsPerPage = 8;
+  const offset = (page - 1) * rowsPerPage;
+  const limit = rowsPerPage;
+
+  const [categories, totalCategories] = await Promise.all([
+    db.category.findMany({
+      skip: offset,
+      take: limit,
+    }),
+    db.category.count(),
+  ]);
+
+  const totalPages = Math.ceil(totalCategories / rowsPerPage);
+
   console.log("Loader: Categories fetched", categories);
-  return json({ categories: categories || [] });
+  return json({ categories: categories || [], currentPage: page, totalPages });
 };
 
 const TableStyle = {
@@ -36,7 +48,11 @@ const TableStyle = {
 };
 
 function Category() {
-  const { categories = [] } = useLoaderData<typeof loader>();
+  const {
+    categories = [],
+    currentPage,
+    totalPages,
+  } = useLoaderData<typeof loader>();
   console.log("Category Component: Loaded categories", categories);
 
   categories.forEach((category) =>
@@ -114,6 +130,47 @@ function Category() {
                 </Tbody>
               </Table>
             </TableContainer>
+          </GridItem>
+          <GridItem>
+            <HStack mt={4} spacing={4} justifyContent="center">
+              {currentPage > 1 && (
+                <Link to={`/admin/categories/${currentPage - 1}`}>
+                  <Button
+                    bg="brand.200"
+                    color="white"
+                    _hover={{ bg: "white", color: "brand.200" }}
+                  >
+                    Previous
+                  </Button>
+                </Link>
+              )}
+              {Array.from({ length: totalPages }, (_, index) => (
+                <ChakraLink
+                  key={index}
+                  as={Link}
+                  to={`/admin/categories/${index + 1}`}
+                >
+                  <Button
+                    variant={currentPage === index + 1 ? "solid" : "ghost"}
+                    bg={currentPage === index + 1 ? "white" : "brand.200"}
+                    color={currentPage === index + 1 ? "brand.200" : "white"}
+                  >
+                    {index + 1}
+                  </Button>
+                </ChakraLink>
+              ))}
+              {currentPage < totalPages && (
+                <Link to={`/admin/categories/${currentPage + 1}`}>
+                  <Button
+                    bg="brand.200"
+                    color="white"
+                    _hover={{ bg: "white", color: "brand.200" }}
+                  >
+                    Next
+                  </Button>
+                </Link>
+              )}
+            </HStack>
           </GridItem>
         </Grid>
       </Box>

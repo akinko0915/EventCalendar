@@ -43,7 +43,7 @@ export const action: ActionFunction = async ({ params }) => {
   }
   try {
     await deleteCategory(categoryId);
-    return redirect("/admin/categories");
+    return redirect("/admin/categories/1");
   } catch (error) {
     console.error("Failed to delete category:", error);
     return json({ error: "Failed to delete category" }, { status: 500 });
@@ -52,7 +52,7 @@ export const action: ActionFunction = async ({ params }) => {
 
 const CategoryDeleteModal = () => {
   const navigate = useNavigate();
-  const onClose = () => navigate("/admin/categories");
+  const onClose = () => navigate("/admin/categories/1");
 
   const { category } = useLoaderData<typeof loader>();
   return (

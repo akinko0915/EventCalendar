@@ -40,7 +40,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const { name, color } = result.data;
   try {
     await updateCategory(categoryId, { name, color });
-    return redirect("/admin/categories");
+    return redirect("/admin/categories/1");
   } catch (error) {
     console.error("Failed to update category:", error);
     return json({ error: "Failed to update category" }, { status: 500 });
