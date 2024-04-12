@@ -1,7 +1,7 @@
 import { titles } from "./titles.js";
 import { categories } from "./categories.js";
 
-function createDate(year, month, day, hours = 0, minutes = 0) {
+export function createDate(year, month, day, hours = 0, minutes = 0) {
   return new Date(year, month - 1, day, hours, minutes);
 }
 
@@ -13,9 +13,11 @@ export const events = [
     startAt: createDate(2024, 1, 15, 16, 30),
     endAt: createDate(2024, 1, 15, 17, 45),
     place: "オモケンパーク",
+    placeUrl: "https://maps.app.goo.gl/WPTvvJir4ssDdAdU7",
     target: "For Starters",
     maximumParticipant: 8,
     fee: 800,
+    discount: 500,
     imageUrl: "JEM-Starters",
     description:
       "学割:500円 英語で楽しくお話したい人・英語学習仲間を増やしたい人・学習しながら英語を楽しく話したい人はぜひ一度参加してみてください",
@@ -27,6 +29,7 @@ export const events = [
     startAt: createDate(2023, 12, 10, 16, 30),
     endAt: createDate(2023, 12, 10, 18, 30),
     place: "レンタルスペース",
+    placeUrl: "https://maps.app.goo.gl/769TEbzNps15c8HH6",
     target: "大学生・高校生・ALT",
     maximumParticipant: 20,
     imageUrl: "EnglishChristmas",
@@ -53,9 +56,11 @@ export const events = [
     startAt: createDate(2024, 1, 22, 16, 30),
     endAt: createDate(2024, 1, 22, 17, 45),
     place: "オモケンパーク",
+    placeUrl: "https://maps.app.goo.gl/WPTvvJir4ssDdAdU7",
     target: "For Active Communicators",
     maximumParticipant: 8,
     fee: 800,
+    discount: 500,
     imageUrl: "JEM-Com",
     description:
       "学割: 500円 英語で楽しくお話したい人・英語学習仲間を増やしたい人・学習しながら英語を楽しく話したい人はぜひ一度参加してみてください",
@@ -64,9 +69,10 @@ export const events = [
     id: "5",
     categoryId: categories[1].id,
     titleId: titles[5].id,
-    startAt: createDate(2024, 1, 28, 16, 30),
-    endAt: createDate(2023, 1, 28, 17, 45),
-    place: "菊池ベース",
+    startAt: createDate(2024, 1, 28, 11, 0),
+    endAt: createDate(2024, 1, 28, 14, 0),
+    place: "菊池みらいベース",
+    placeUrl: "https://maps.app.goo.gl/LrmeKoRxKML6QcSq9",
     target: "菊池市在住の方",
     maximumParticipant: 10,
     fee: 500,
@@ -81,9 +87,11 @@ export const events = [
     startAt: createDate(2024, 1, 29, 16, 30),
     endAt: createDate(2024, 1, 29, 17, 45),
     place: "オモケンパーク",
+    placeUrl: "https://maps.app.goo.gl/WPTvvJir4ssDdAdU7",
     target: "For Starters",
     maximumParticipant: 8,
     fee: 800,
+    discount: 500,
     imageUrl: "JEM-Starters",
     description:
       "学割: 500円 英語で楽しくお話したい人・英語学習仲間を増やしたい人・学習しながら英語を楽しく話したい人はぜひ一度参加してみてください",

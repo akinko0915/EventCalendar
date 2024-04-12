@@ -15,6 +15,8 @@ export const users = [
   },
   {
     name: "Aki",
+    belonging: "学生",
+    sex: "女",
     email: "aki@gmail.com",
     password: hashedPassword,
   },

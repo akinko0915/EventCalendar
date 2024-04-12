@@ -140,3 +140,7 @@ p {
   font-weight: 500;
   margin-top: 3px;
 }
+
+.form-error {
+  color: #dc143c;
+}
